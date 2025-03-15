@@ -1,46 +1,100 @@
+/* Reset some default margins/padding */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background-color: #f8f9fa;
     font-family: "Roboto", sans-serif;
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.title {
-    font-size: 50px;
-    color: rgb(206, 29, 29);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -50px;
-    margin-left: -50px;
-}
-
-.registerbutton {
-    background-color: gray;
-    border: none;
-    padding: 15px 32px;
+/* Main container to center content */
+.container {
+    max-width: 600px;
+    width: 90%;
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
+}
+
+/* Header styles */
+.header h1 {
+    font-size: 48px;
+    color: #ce1d1d;
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+/* Navigation links */
+.navbar {
+    margin: 20px 0;
+}
+
+.navbar a {
+    margin: 0 10px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #007bff;
+}
+
+/* Button styles */
+.button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    margin: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    left: 300px;
-    top: 700px;
-    position: absolute;
-    transition-duration: 0.4s;
 }
 
-.loginbutton {
-    background-color: green;
-    border: none;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
+.button:hover {
+    background-color: #0056b3;
+}
+
+/* Form input styling */
+form input[type="text"],
+form input[type="password"],
+form input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Flash message styling */
+.alert {
+    color: #d9534f;
     font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    left: 300px;
-    top: 700px;
-    position: absolute;
-    transition-duration: 0.4s;
+    margin-top: 20px;
+}
+
+/* Link styling for "Back to Home" etc. */
+.back-link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
 }

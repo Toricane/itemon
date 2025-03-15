@@ -1,3 +1,4 @@
+import io
 import json
 import os
 import random
@@ -15,6 +16,8 @@ from flask import (
     url_for,
 )
 from google import genai
+from google.genai import types
+from PIL import Image
 
 load_dotenv()
 
@@ -105,62 +108,145 @@ def logout():
     return redirect(url_for("index"))
 
 
+def process_uploaded_image(uploaded_file, output_filename=None, resize_dimensions=None):
+    try:
+        # Validate the file
+        if not uploaded_file or uploaded_file.filename == "":
+            return {"error": "No file selected"}
+        if not uploaded_file.content_type.startswith("image/"):
+            return {"error": "Only image files are allowed"}
+
+        # Read the file content into a BytesIO buffer
+        buffer = io.BytesIO()
+        uploaded_file.save(buffer)
+        buffer.seek(0)
+
+        # Open the image using PIL
+        img = Image.open(buffer)
+
+        # Resize the image if dimensions are provided
+        if resize_dimensions:
+            img = img.resize(resize_dimensions)
+
+        # Save the processed image
+        # img.save(output_filename)
+
+        # return {"message": "Image processed successfully"}
+        return img
+
+    except Exception as e:
+        return {"error": str(e)}
+
+
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
+    user = session.get("user")
+    if not user:
+        flash("You must be logged in to upload an item.")
+        return redirect(url_for("login"))
     if request.method == "POST":
         if "file" not in request.files:
             flash("No file provided.")
             return redirect(url_for("upload"))
-
         file = request.files["file"]
-        # user_id = request.form.get("user_id")
-        # if not user_id:
-        #     flash("User ID is required.")
-        #     return redirect(url_for("upload"))
-
         os.makedirs("uploads", exist_ok=True)
-        file_path = os.path.join("uploads", file.filename)
-        print(file)
+        file_id = str(uuid.uuid4())
+        file_extension = file.filename.split(".")[-1]
+        file_local_path = file_id + "." + file_extension
+        file_path = os.path.join("uploads", file_local_path)
         file.save(file_path)
 
+        image = Image.open(file_path)
+
         # # Simulate the Gemini 2.0 Flash API processing.
-        # simulated_response = {
-        #     "name": "chair",
-        #     "variety": "old wooden chair",
-        #     "rarity": "common",
-        #     "hp": 50,
-        #     "moves": [
-        #         "Slam",
-        #         "Rest",
-        #         "Scratch"
-        #     ]
-        # }
+        simulated_response = {
+            "name": "chair",
+            "variety": "old wooden chair",
+            "rarity": "common",
+            "hp": 50,
+            "moves": ["Slam", "Rest", "Scratch"],
+        }
+        print("image", image)
+        response = ai.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[
+                """Process the following image and output only JSON (no ``` necessary) with the following structure:
 
-        # db = read_db()
-        # user = next((u for u in db["users"] if u["id"] == user_id), None)
-        # if not user:
-        #     flash("User not found.")
-        #     return redirect(url_for('upload'))
+- Name (e.g. chair, juice box, laptop, cookie, sheet of paper)
+- Variety (e.g. tall chair, orange juice, macbook, chocolate chip, blue construction paper)
+- Element (e.g. wood, plastic, organic, metal, digital, etc.)
+- Rarity (e.g. common, uncommon, rare, epic, legendary)
+- HP based on the rarity (e.g. 50 for common, 100 for uncommon, 150 for rare, 200 for epic, 250 for legendary)
+- 2 moves based on the item name amd element (e.g. chair: Slam, Splinter; juice box: Sip, Crush; laptop: Code, Compile; cookie: Bite, Dunk; sheet of paper: Plane, Fortune Teller)
+- 1 move based on the variety (e.g. tall chair: Fall, Climb; orange juice: Citric Acid; macbook: Apple Crunch; chocolate chip: Chocolatey Crumble; blue construction paper: Ninja Star)
 
-        # new_item = {
-        #     "id": str(uuid.uuid4()),
-        #     "owner": user_id,
-        #     "data": simulated_response,
-        #     "photo": file_path
-        # }
-        # db["items"].append(new_item)
-        # user["items"].append(new_item["id"])
-        # write_db(db)
+Example:
+```json
+{
+    "name": "chair",
+    "variety": "old wooden chair",
+    "element": "wooden",
+    "rarity": "common",
+    "hp": 50,
+    "moves": [
+        {"name": "Scratch", "type": "normal", "power": 30},
+        {"name": "Fall", "type": "normal", "power": 40},
+        {"name": "Splinter", "type": "wood", "power": 50},
+    ]
+}
+```""",
+                image,
+            ],
+        )
+        print("Response:", response.text)
+
+        output = response.text.replace("```json", "").replace("```", "").strip()
+        json_obj = json.loads(output)
+
+        print(response.text)
+
+        db = read_db()
+        # Find the logged-in user in the database.
+        db_user = next((u for u in db["users"] if u["id"] == user["id"]), None)
+        if not db_user:
+            flash("User not found.")
+            return redirect(url_for("upload"))
+        new_item = {
+            "id": str(uuid.uuid4()),
+            "owner": user["id"],
+            "data": json_obj,
+            "photo": file_path,
+        }
+        db["items"].append(new_item)
+        db_user["items"].append(new_item["id"])
+        write_db(db)
 
         flash("Item uploaded and processed!")
         return redirect(url_for("index"))
-
     return render_template("upload.html")
 
 
-@app.route("/battle")
-def battle(): ...
+@app.route("/battle", methods=["GET", "POST"])
+def battle():
+    user = session.get("user")
+    if not user:
+        flash("You must be logged in to battle.")
+        return redirect(url_for("login"))
+    if request.method == "POST":
+        # Logged-in user's ID is automatically used.
+        user1_id = user["id"]
+        # Opponent ID is provided manually (or can be extended to selection logic).
+        opponent_id = request.form.get("opponent_id")
+        if not opponent_id:
+            flash("Opponent ID is required.")
+            return redirect(url_for("battle"))
+        # Randomly select a winner as a placeholder.
+        winner = random.choice([user1_id, opponent_id])
+        flash("Battle concluded! Winner: " + winner)
+        return redirect(url_for("index"))
+    return render_template("battle.html", user=user)
 
 
 if __name__ == "__main__":
+    app.run(debug=True)
     app.run(debug=True)

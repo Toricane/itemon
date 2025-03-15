@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Upload Item - Itémon</title>
+        <title>Upload Item - Itemon</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/homepage.css') }}"
+        />
     </head>
     <body>
-        <h1>Upload an Item</h1>
-        <form
-            method="post"
-            action="{{ url_for('upload') }}"
-            enctype="multipart/form-data"
-        >
-            <label for="user_id">User ID:</label>
-            <input type="text" name="user_id" id="user_id" required />
-            <br />
-            <label for="file">Select a Photo:</label>
-            <input
-                type="file"
-                name="file"
-                id="file"
-                accept="image/*"
-                required
-            />
-            <br />
-            <button type="submit">Upload</button>
-        </form>
-        <p><a href="{{ url_for('index') }}">Back to Home</a></p>
-        {% with messages = get_flashed_messages() %} {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %} {% endwith %}
+        <div class="container">
+            <div class="header">
+                <h1>Upload an Item</h1>
+            </div>
+            <form
+                method="post"
+                action="{{ url_for('upload') }}"
+                enctype="multipart/form-data"
+            >
+                <input type="file" name="file" accept="image/*" required />
+                <div>
+                    <button type="submit" class="button">Upload</button>
+                </div>
+            </form>
+            <p>
+                <a href="{{ url_for('index') }}" class="back-link"
+                    >Back to Home</a
+                >
+            </p>
+            {% with messages = get_flashed_messages() %} {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li class="alert">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %} {% endwith %}
+        </div>
     </body>
 </html>

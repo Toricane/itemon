@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Battle - Itemon</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/homepage.css') }}"
+        />
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Battle</h1>
+                <p>You are logged in as: {{ user.username }}</p>
+            </div>
+            <form method="post" action="{{ url_for('battle') }}">
+                <input
+                    type="text"
+                    name="opponent_id"
+                    placeholder="Opponent User ID"
+                    required
+                />
+                <div>
+                    <button type="submit" class="button">Start Battle</button>
+                </div>
+            </form>
+            <p>
+                <a href="{{ url_for('index') }}" class="back-link"
+                    >Back to Home</a
+                >
+            </p>
+            {% with messages = get_flashed_messages() %} {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li class="alert">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %} {% endwith %}
+        </div>
+    </body>
+</html>

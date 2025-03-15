@@ -1,26 +1,50 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Login - Itémon</title>
+        <title>Login - Itemon</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/homepage.css') }}"
+        />
     </head>
     <body>
-        <h1>Login</h1>
-        <form method="post" action="{{ url_for('login') }}">
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required />
-            <br />
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required />
-            <br />
-            <button type="submit">Login</button>
-        </form>
-        <p><a href="{{ url_for('register') }}">Register here</a></p>
-        {% with messages = get_flashed_messages() %} {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %} {% endwith %}
+        <div class="container">
+            <div class="header">
+                <h1>Login</h1>
+            </div>
+            <form method="post" action="{{ url_for('login') }}">
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    required
+                />
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                />
+                <div>
+                    <button type="submit" class="button">Login</button>
+                </div>
+            </form>
+            <p>
+                <a href="{{ url_for('register') }}" class="back-link"
+                    >Register here</a
+                >
+                |
+                <a href="{{ url_for('index') }}" class="back-link"
+                    >Back to Home</a
+                >
+            </p>
+            {% with messages = get_flashed_messages() %} {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li class="alert">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %} {% endwith %}
+        </div>
     </body>
 </html>
