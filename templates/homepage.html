@@ -27,8 +27,10 @@
             {% endif %}
 
             <nav class="navbar">
+                <a href="{{ url_for('my_items') }}">My Itémon</a> |
                 <a href="{{ url_for('upload') }}">Upload Item</a> |
-                <a href="{{ url_for('battle') }}">Battle</a>
+                <a href="{{ url_for('battle') }}">Battle</a> |
+                <a href="{{ url_for('players') }}">All Players</a>
             </nav>
 
             {% with messages = get_flashed_messages() %} {% if messages %}

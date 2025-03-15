@@ -6,35 +6,86 @@
             rel="stylesheet"
             href="{{ url_for('static', filename='css/homepage.css') }}"
         />
+        <style>
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            .battle-form {
+                background-color: #f5f5f5;
+                padding: 20px;
+                border-radius: 10px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .button {
+                background-color: #4caf50;
+                color: white;
+                padding: 12px 24px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 1.1em;
+            }
+            .button:hover {
+                background-color: #45a049;
+            }
+            .back-link {
+                display: inline-block;
+                margin-top: 15px;
+                color: #666;
+                text-decoration: none;
+            }
+            .back-link:hover {
+                text-decoration: underline;
+            }
+            .alert {
+                background-color: #f8d7da;
+                color: #721c24;
+                padding: 10px;
+                margin: 10px 0;
+                border-radius: 5px;
+            }
+            .battle-info {
+                margin: 20px 0;
+            }
+        </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                <h1>Battle</h1>
-                <p>You are logged in as: {{ user.username }}</p>
+                <h1>Battle Arena</h1>
+                <p>
+                    You are logged in as: <strong>{{ user.username }}</strong>
+                </p>
             </div>
-            <form method="post" action="{{ url_for('battle') }}">
-                <input
-                    type="text"
-                    name="opponent_id"
-                    placeholder="Opponent User ID"
-                    required
-                />
-                <div>
-                    <button type="submit" class="button">Start Battle</button>
-                </div>
-            </form>
+
+            <div class="battle-form">
+                <h2>Ready to Battle?</h2>
+                <p class="battle-info">
+                    Click the button below to be matched with a random opponent!
+                </p>
+                <form method="post" action="{{ url_for('battle') }}">
+                    <button type="submit" class="button">
+                        Find Opponent & Battle!
+                    </button>
+                </form>
+            </div>
+
             <p>
                 <a href="{{ url_for('index') }}" class="back-link"
                     >Back to Home</a
                 >
             </p>
+
             {% with messages = get_flashed_messages() %} {% if messages %}
-            <ul>
+            <div class="alerts">
                 {% for message in messages %}
-                <li class="alert">{{ message }}</li>
+                <p class="alert">{{ message }}</p>
                 {% endfor %}
-            </ul>
+            </div>
             {% endif %} {% endwith %}
         </div>
     </body>

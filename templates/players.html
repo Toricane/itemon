@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>All Players - Itémon</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/homepage.css') }}"
+        />
+        <style>
+            .player-list {
+                margin-top: 20px;
+            }
+            .player-item {
+                padding: 10px;
+                margin-bottom: 10px;
+                background-color: #f5f5f5;
+                border-radius: 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .player-name {
+                font-weight: bold;
+            }
+            .item-count {
+                color: #666;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>All Itémon Players</h1>
+                <p>Discover other trainers and their collections</p>
+            </div>
+
+            <div class="player-list">
+                {% for player in players %}
+                <div class="player-item">
+                    <span class="player-name">{{ player.username }}</span>
+                    <span class="item-count"
+                        >Items: {{ player['items']|length }}</span
+                    >
+                    <a
+                        href="{{ url_for('player_gallery', user_id=player.id) }}"
+                        class="button"
+                        >View Collection</a
+                    >
+                </div>
+                {% endfor %}
+            </div>
+
+            <p>
+                <a href="{{ url_for('index') }}" class="back-link"
+                    >Back to Home</a
+                >
+            </p>
+
+            {% with messages = get_flashed_messages() %} {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li class="alert">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %} {% endwith %}
+        </div>
+    </body>
+</html>
