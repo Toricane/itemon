@@ -643,5 +643,11 @@ def uploaded_file(filename):
     return send_from_directory("uploads", filename)
 
 
+# return the battle music
+@app.route("/battle_music")
+def battle_music():
+    return send_from_directory("static", "battle_music.mp3")
+
+
 if __name__ == "__main__":
     app.run(debug=True)

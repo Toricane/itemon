@@ -6,6 +6,7 @@
             rel="stylesheet"
             href="{{ url_for('static', filename='css/homepage.css') }}"
         />
+
         <style>
             .container {
                 max-width: 800px;
@@ -156,6 +157,19 @@
         </style>
     </head>
     <body>
+        <audio
+            id="music"
+            src="{{ url_for('static', filename='battle_music.mp3') }}"
+            autoplay
+        ></audio>
+        <script>
+            window.addEventListener("load", () => {
+                const music = document.getElementById("music");
+                music.play().catch((error) => {
+                    console.log("Autoplay blocked. User interaction required.");
+                });
+            });
+        </script>
         <div class="container">
             <div class="battle-header">
                 <h1>Battle Results</h1>
