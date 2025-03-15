@@ -3,7 +3,17 @@ body {
     font-family: "Roboto", sans-serif;
 }
 
-registerbutton {
+.title {
+    font-size: 50px;
+    color: rgb(206, 29, 29);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+}
+
+.registerbutton {
     background-color: gray;
     border: none;
     padding: 15px 32px;
@@ -18,7 +28,8 @@ registerbutton {
     position: absolute;
     transition-duration: 0.4s;
 }
-loginbutton {
+
+.loginbutton {
     background-color: green;
     border: none;
     padding: 15px 32px;

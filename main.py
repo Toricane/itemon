@@ -4,7 +4,16 @@ import random
 import uuid
 
 from dotenv import load_dotenv
-from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
+from flask import (
+    Flask,
+    flash,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from google import genai
 
 load_dotenv()
@@ -32,10 +41,10 @@ def write_db(data):
 
 @app.route("/")
 def index():
-    return render_template("homepage.html")
+    user = session.get("user")
+    return render_template("homepage.html", user=user)
 
 
-# register, upload, battle
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -63,6 +72,37 @@ def register():
         return redirect(url_for("index"))
 
     return render_template("register.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        db = read_db()
+        user = next(
+            (
+                u
+                for u in db["users"]
+                if u["username"] == username and u["password"] == password
+            ),
+            None,
+        )
+        if user:
+            session["user"] = user  # Store user details in the session.
+            flash("Logged in successfully!")
+            return redirect(url_for("index"))
+        else:
+            flash("Invalid credentials.")
+            return redirect(url_for("login"))
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    flash("Logged out.")
+    return redirect(url_for("index"))
 
 
 @app.route("/upload", methods=["GET", "POST"])
@@ -116,6 +156,10 @@ def upload():
         return redirect(url_for("index"))
 
     return render_template("upload.html")
+
+
+@app.route("/battle")
+def battle(): ...
 
 
 if __name__ == "__main__":

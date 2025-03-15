@@ -1,30 +1,50 @@
 <!DOCTYPE html>
 <html>
-    <body>
-        <head>
-            <title>Itemon</title>
-            <link rel="stylesheet" href="/templates/css/homepage.css" />
-        </head>
-        <div class="heading">
-            <h1>Welcome to Itemon!</h1>
+    <head>
+        <title>Itemon</title>
 
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/homepage.css') }}"
+        />
+    </head>
+    <body>
+        <div class="title">
+            <h1>Welcome to Itemon!</h1>
             <p>An interactive game about random items</p>
         </div>
+
+        {% if user %}
+        <p>Logged in as: {{ user.username }}</p>
         <div>
-            <a
-                href="register.html"
-                class="registerbutton"
-                style="width: 400px; height: 1200px"
-                ><h3>register</h3></a
-            >
+            <a href="{{ url_for('logout') }}" class="loginbutton">
+                <h3>Logout</h3>
+            </a>
+        </div>
+        {% else %}
+        <div>
+            <a href="{{ url_for('login') }}" class="loginbutton">
+                <h3>Login</h3>
+            </a>
         </div>
         <div>
-            <a
-                href="login.html"
-                class="loginbutton"
-                style="width: 400px; height: 1200px"
-                ><h3>login</h3></a
-            >
+            <a href="{{ url_for('register') }}" class="registerbutton">
+                <h3>Register</h3>
+            </a>
         </div>
+        {% endif %}
+
+        <nav>
+            <a href="{{ url_for('upload') }}">Upload Item</a> |
+            <a href="{{ url_for('battle') }}">Battle</a>
+        </nav>
+
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
     </body>
 </html>
