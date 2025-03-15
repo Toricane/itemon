@@ -1,0 +1,35 @@
+body {
+    background-color: #f8f9fa;
+    font-family: "Roboto", sans-serif;
+}
+
+registerbutton {
+    background-color: gray;
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    left: 300px;
+    top: 700px;
+    position: absolute;
+    transition-duration: 0.4s;
+}
+loginbutton {
+    background-color: green;
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    left: 300px;
+    top: 700px;
+    position: absolute;
+    transition-duration: 0.4s;
+}
