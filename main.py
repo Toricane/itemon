@@ -195,14 +195,20 @@ Example:
         {"name": "Splinter", "type": "wood", "power": 50},
     ]
 }
-```""",
+```
+
+However, if you're unable to do it because the image is invalid for this activity, return no JSON.""",
                 image,
             ],
         )
         print("Response:", response.text)
 
-        output = response.text.replace("```json", "").replace("```", "").strip()
-        json_obj = json.loads(output)
+        try:
+            output = response.text.replace("```json", "").replace("```", "").strip()
+            json_obj = json.loads(output)
+        except json.JSONDecodeError:
+            flash("Invalid image for processing.")
+            return redirect(url_for("upload"))
 
         print(response.text)
 
