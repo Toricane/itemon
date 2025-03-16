@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from flask import (
     Flask,
     flash,
-    jsonify,
     redirect,
     render_template,
     request,
@@ -17,7 +16,6 @@ from flask import (
     url_for,
 )
 from google import genai
-from google.genai import types
 from PIL import Image
 
 load_dotenv()
